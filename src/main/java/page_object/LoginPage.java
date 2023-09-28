@@ -11,6 +11,7 @@ import java.time.Duration;
 public class LoginPage {
 
     private static WebDriver driver;
+
     public LoginPage(WebDriver driver) {
         this.driver = driver;
     }
@@ -20,58 +21,56 @@ public class LoginPage {
     private By enterButton = By.cssSelector(".button_button__33qZ0");
     private By signUpText = By.cssSelector(".Auth_link__1fOlj[href=\"/register\"]");
     private By forgotPasswordText = By.cssSelector(".Auth_link__1fOlj[href=\"/forgot-password\"]");
-    private By headerName = By.xpath("//div/h2[text()='Вход']");
+    private By headerName = By.xpath(".//h2[text()='Вход']");
 
 
-    public WebElement waitForEmailFieldVisibility()
-    {
+    public WebElement waitForEmailFieldVisibility() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         return wait.until(ExpectedConditions.visibilityOfElementLocated(emailField));
     }
-    public WebElement waitForPasswordFieldVisibility()
-    {
+
+    public WebElement waitForPasswordFieldVisibility() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         return wait.until(ExpectedConditions.visibilityOfElementLocated(passwordField));
     }
-    public WebElement waitForEnterButtonVisibility()
-    {
+
+    public WebElement waitForEnterButtonVisibility() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         return wait.until(ExpectedConditions.visibilityOfElementLocated(enterButton));
     }
-    public WebElement waitForSignUpTextVisibility()
-    {
+
+    public WebElement waitForSignUpTextVisibility() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         return wait.until(ExpectedConditions.visibilityOfElementLocated(signUpText));
     }
-    public WebElement waitForForgotPasswordTextVisibility()
-    {
+
+    public WebElement waitForForgotPasswordTextVisibility() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         return wait.until(ExpectedConditions.visibilityOfElementLocated(forgotPasswordText));
     }
 
 
-    public void waitAndClickEmailField()
-    {
+    public void waitAndClickEmailField() {
         waitForEmailFieldVisibility();
         driver.findElement(emailField).click();
     }
-    public void waitAndClickPasswordField()
-    {
+
+    public void waitAndClickPasswordField() {
         waitForPasswordFieldVisibility();
         driver.findElement(passwordField).click();
     }
-    public void waitAndClickEnterButton()
-    {
+
+    public void waitAndClickEnterButton() {
         waitForEnterButtonVisibility();
         driver.findElement(enterButton).click();
     }
-    public void waitAndClickSignUpText()
-    {
+
+    public void waitAndClickSignUpText() {
         waitForSignUpTextVisibility();
         driver.findElement(signUpText).click();
     }
-    public void waitAndClickForgotPasswordText()
-    {
+
+    public void waitAndClickForgotPasswordText() {
         waitForForgotPasswordTextVisibility();
         driver.findElement(forgotPasswordText).click();
     }
@@ -82,6 +81,7 @@ public class LoginPage {
         emailInputElement.clear();
         emailInputElement.sendKeys(text);
     }
+
     public void sendKeysToPasswordField(String text) {
         waitAndClickPasswordField();
         WebElement emailInputElement = driver.findElement(passwordField);

@@ -7,11 +7,11 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import page_object.LoginPage;
 import page_object.MainPage;
 import page_object.RegistrationPage;
 
+import static driver.WebDriverCreator.createWebDriver;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 
@@ -27,9 +27,10 @@ public class RegisterTests {
     String validPassword = RandomStringUtils.randomAlphabetic(6);
     String invalidPassword = RandomStringUtils.randomAlphabetic(4);
 
+
     @Before
     public void setUp() {
-        driver = new ChromeDriver();
+        driver = createWebDriver();
 
         mainPage = new MainPage(driver);
         loginPage = new LoginPage(driver);
@@ -42,8 +43,7 @@ public class RegisterTests {
 
     @DisplayName("Регистрация с главной страницы")
     @Test
-    public void registrationFromMainPageTest()
-    {
+    public void registrationFromMainPageTest() {
         mainPage.waitForMakeOrderButtonVisibility();
         String buttonText = mainPage.getMakeOrderButtonText();
         Assert.assertTrue(buttonText.contains("Войти в аккаунт"));
@@ -68,8 +68,7 @@ public class RegisterTests {
 
     @DisplayName("Регистрация с паролем <6 символов")
     @Test
-    public void registrationWithInvalidPasswordTest()
-    {
+    public void registrationWithInvalidPasswordTest() {
         mainPage.waitForMakeOrderButtonVisibility();
         String buttonText = mainPage.getMakeOrderButtonText();
         Assert.assertTrue(buttonText.contains("Войти в аккаунт"));
@@ -87,8 +86,7 @@ public class RegisterTests {
     }
 
     @After
-    public void tearDownAndDeleteUser()
-    {
+    public void tearDownAndDeleteUser() {
         String accessToken = given()
                 .contentType(ContentType.JSON)
                 .body("{\"email\":\"" + email + "\"," + "\"password\":\"" + validPassword + "\"}")
@@ -98,7 +96,7 @@ public class RegisterTests {
                 .extract()
                 .path("accessToken");
 
-        if( accessToken != null) {
+        if (accessToken != null) {
             given()
                     .contentType(ContentType.JSON)
                     .header("Authorization", accessToken)

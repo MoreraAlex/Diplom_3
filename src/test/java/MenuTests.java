@@ -1,10 +1,12 @@
 import io.qameta.allure.junit4.DisplayName;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import page_object.MainPage;
+
+import static driver.WebDriverCreator.createWebDriver;
 
 public class MenuTests {
 
@@ -13,7 +15,7 @@ public class MenuTests {
 
     @Before
     public void setUp() {
-        driver = new ChromeDriver();
+        driver = createWebDriver();
 
         mainPage = new MainPage(driver);
         driver.get("https://stellarburgers.nomoreparties.site");
@@ -21,32 +23,37 @@ public class MenuTests {
 
     @DisplayName("Переход к части меню 'Соусы'")
     @Test
-    public void moveToSauceTab()
-    {
+    public void moveToSauceTab() {
         mainPage.waitAndClickConstructorSauceTab();
-        mainPage.waitForMenuSauceBlockVisibility();
+        mainPage.waitForConstructorSauceTabVisibility();
+        String er = mainPage.checkForMenuSauceBlockActivation().getText();
+        mainPage.waitForConstructorSauceTabVisibility();
+        Assert.assertTrue(er.equals("Соусы"));
     }
 
     @DisplayName("Переход к части меню 'Булки'")
     @Test
-    public void moveToBunsTab()
-    {
+    public void moveToBunsTab() {
         mainPage.waitAndClickConstructorSauceTab();
         mainPage.waitAndClickConstructorBunsTab();
-        mainPage.waitForMenuBunsBlockVisibility();
+        mainPage.waitForConstructorBunsTabVisibility();
+        String er = mainPage.checkForMenuBunsBlockActivation().getText();
+        mainPage.waitForConstructorBunsTabVisibility();
+        Assert.assertTrue(er.equals("Булки"));
     }
 
     @DisplayName("Переход к части меню 'Начинки'")
     @Test
-    public void moveToFillingsTab()
-    {
-        mainPage.waitAndClickConstructorSauceTab();
-        mainPage.waitForMenuFillingsBlockVisibility();
+    public void moveToFillingsTab() {
+        mainPage.waitAndClickConstructorFillingsTab();
+        mainPage.waitForConstructorFillingsTabVisibility();
+        String er = mainPage.checkForMenuFillingsBlockActivation().getText();
+        mainPage.waitForConstructorFillingsTabVisibility();
+        Assert.assertTrue(er.equals("Начинки"));
     }
 
     @After
-    public void tearDown()
-    {
+    public void tearDown() {
         driver.quit();
     }
 

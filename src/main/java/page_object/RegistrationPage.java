@@ -17,8 +17,8 @@ public class RegistrationPage {
     //локаторы
     private By nameField = By.cssSelector(".Auth_fieldset__1QzWN:nth-child(1) .input__textfield");
     private By emailField = By.cssSelector(".Auth_fieldset__1QzWN:nth-child(2) .input__textfield");
-    private By passwordField = By.cssSelector(".Auth_fieldset__1QzWN:nth-child(3) .input__textfield");
-    private By signUpButton = By.cssSelector(".button_button__33qZ0");
+    private By passwordField = By.xpath("//input[@name='Пароль']");
+    private By signUpButton = By.xpath("//button[text() = 'Зарегистрироваться']");
     private By signInText = By.cssSelector(".Auth_link__1fOlj[href=\"/login\"]");
     private By passwordError = By.xpath("//p[contains(.,'Некорректный пароль')]");
 

@@ -1,16 +1,18 @@
+import Constructor.User;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hamcrest.CoreMatchers;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import page_object.*;
+import page_object.LoginPage;
+import page_object.MainPage;
+import page_object.ProfilePage;
 
+import static driver.WebDriverCreator.createWebDriver;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 
@@ -18,21 +20,22 @@ public class LogoutTests {
     private WebDriver driver;
     private MainPage mainPage;
     private LoginPage loginPage;
-    private RegistrationPage registrationPage;
     private ProfilePage profilePage;
 
     String accessToken;
     String email = RandomStringUtils.randomAlphabetic(10) + "@gmail.com";
     String name = RandomStringUtils.randomAlphabetic(10);
+    String password = RandomStringUtils.randomAlphabetic(10);
+    User user = new User(email, password, name);
+
 
 
     @Before
     public void setUp() {
-        driver = new ChromeDriver();
+        driver = createWebDriver();
 
         mainPage = new MainPage(driver);
         loginPage = new LoginPage(driver);
-        registrationPage = new RegistrationPage(driver);
         profilePage = new ProfilePage(driver);
 
         driver.get("https://stellarburgers.nomoreparties.site");
@@ -40,9 +43,7 @@ public class LogoutTests {
 
         accessToken = given()
                 .contentType(ContentType.JSON)
-                .body("{\"email\":\"" + email + "\"," +
-                        "\"password\":\"123456\"," +
-                        "\"name\":\"" + name + "\"}")
+                .body(user)
                 .when()
                 .post("/api/auth/register")
                 .then()
@@ -57,11 +58,10 @@ public class LogoutTests {
 
     @DisplayName("Проверка логаута")
     @Test
-    public void logoutTest()
-    {
+    public void logoutTest() {
         mainPage.waitAndClickHeaderPersonalAccountButton();
         loginPage.sendKeysToEmailField(email);
-        loginPage.sendKeysToPasswordField("123456");
+        loginPage.sendKeysToPasswordField(password);
         loginPage.waitAndClickEnterButton();
         mainPage.waitAndClickHeaderPersonalAccountButton();
 
@@ -71,8 +71,7 @@ public class LogoutTests {
     }
 
     @After
-    public void tearDown()
-    {
+    public void tearDown() {
         given()
                 .contentType(ContentType.JSON)
                 .header("Authorization", accessToken)

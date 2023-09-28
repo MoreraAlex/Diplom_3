@@ -1,3 +1,4 @@
+import Constructor.User;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -8,9 +9,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import page_object.*;
 
+import static driver.WebDriverCreator.createWebDriver;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 
@@ -25,11 +26,14 @@ public class HeaderTabsTests {
 
     String accessToken;
     String email = RandomStringUtils.randomAlphabetic(10) + "@gmail.com";
+    String password = RandomStringUtils.randomAlphabetic(10);
     String name = RandomStringUtils.randomAlphabetic(10);
+
+    User user = new User(email, password, name);
 
     @Before
     public void setUp() {
-        driver = new ChromeDriver();
+        driver = createWebDriver();
 
         mainPage = new MainPage(driver);
         loginPage = new LoginPage(driver);
@@ -43,9 +47,7 @@ public class HeaderTabsTests {
 
         accessToken = given()
                 .contentType(ContentType.JSON)
-                .body("{\"email\":\"" + email + "\"," +
-                        "\"password\":\"123456\"," +
-                        "\"name\":\"" + name + "\"}")
+                .body(user)
                 .when()
                 .post("/api/auth/register")
                 .then()
@@ -61,11 +63,9 @@ public class HeaderTabsTests {
     }
 
 
-
     @DisplayName("Клик на кнопку 'Личный кабинет' неавторизованным юзером")
     @Test
-    public void clickPersonalAccountButtonAsUnauthorizedUser()
-    {
+    public void clickPersonalAccountButtonAsUnauthorizedUser() {
         mainPage.waitAndClickHeaderPersonalAccountButton();
 
         String headerName = loginPage.getHeaderText();
@@ -74,11 +74,10 @@ public class HeaderTabsTests {
 
     @DisplayName("Клик на кнопку 'Личный кабинет' авторизованным юзером")
     @Test
-    public void clickPersonalAccountButtonAsAuthorizedUser()
-    {
+    public void clickPersonalAccountButtonAsAuthorizedUser() {
         mainPage.waitAndClickHeaderPersonalAccountButton();
         loginPage.sendKeysToEmailField(email);
-        loginPage.sendKeysToPasswordField("123456");
+        loginPage.sendKeysToPasswordField(password);
         loginPage.waitAndClickEnterButton();
 
         mainPage.waitAndClickHeaderPersonalAccountButton();
@@ -90,8 +89,7 @@ public class HeaderTabsTests {
 
     @DisplayName("Клик на кнопку 'Конструктор' из 'Личный кабинет'")
     @Test
-    public void moveToMainPageFromPersonalAccount()
-    {
+    public void moveToMainPageFromPersonalAccount() {
         mainPage.waitAndClickHeaderPersonalAccountButton();
         mainPage.waitAndClickHeaderConstructorButton();
 
@@ -101,8 +99,7 @@ public class HeaderTabsTests {
 
     @DisplayName("Клик на 'логотип'")
     @Test
-    public void moveToMainPageByLogoClick()
-    {
+    public void moveToMainPageByLogoClick() {
         mainPage.waitAndClickHeaderLogoButton();
 
         String mainPageTableText = mainPage.getTableText();
@@ -110,18 +107,17 @@ public class HeaderTabsTests {
     }
 
     @After
-    public void tearDown()
-    {
+    public void tearDown() {
         String accessToken = given()
                 .contentType(ContentType.JSON)
-                .body("{\"email\":\"" + email + "\"," + "\"password\":\"123456\"}")
+                .body("{\"email\":\"" + email + "\"," + "\"password\":\"" + password + "\"}")
                 .when()
                 .post("/api/auth/login")
                 .then()
                 .extract()
                 .path("accessToken");
 
-        if( accessToken != null) {
+        if (accessToken != null) {
             given()
                     .contentType(ContentType.JSON)
                     .header("Authorization", accessToken)

@@ -10,43 +10,42 @@ import java.time.Duration;
 
 public class ForgotPasswordPage {
     private static WebDriver driver;
+
     public ForgotPasswordPage(WebDriver driver) {
         this.driver = driver;
     }
 
-    private By emailField = By.xpath("//fieldset/div/div/label[text()='Email']");
+    private By emailField = By.xpath("//label[text()='Email']");
     private By recoverButton = By.cssSelector(".button_button__33qZ0");
     private By signInText = By.cssSelector(".Auth_link__1fOlj[href=\"/login\"]");
 
 
-    public WebElement waitForEmailFieldVisibility()
-    {
+    public WebElement waitForEmailFieldVisibility() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         return wait.until(ExpectedConditions.visibilityOfElementLocated(emailField));
     }
-    public WebElement waitForRecoverButtonVisibility()
-    {
+
+    public WebElement waitForRecoverButtonVisibility() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         return wait.until(ExpectedConditions.visibilityOfElementLocated(recoverButton));
     }
-    public WebElement waitForSignInTextVisibility()
-    {
+
+    public WebElement waitForSignInTextVisibility() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         return wait.until(ExpectedConditions.visibilityOfElementLocated(signInText));
     }
 
-    public void waitAndClickEmailField()
-    {
+    public void waitAndClickEmailField() {
         waitForEmailFieldVisibility();
         driver.findElement(emailField).click();
     }
-    public void waitAndClickRecoverButton()
-    {
+
+    public void waitAndClickRecoverButton() {
         waitForEmailFieldVisibility();
         driver.findElement(recoverButton).click();
     }
-    public void waitAndClickSignInText()
-    {
+
+    public void waitAndClickSignInText() {
         waitForSignInTextVisibility();
         driver.findElement(signInText).click();
     }
